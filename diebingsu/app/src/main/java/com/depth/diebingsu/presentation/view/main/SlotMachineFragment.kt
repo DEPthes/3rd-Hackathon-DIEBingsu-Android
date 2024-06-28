@@ -55,6 +55,10 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
             }
             false
         }
+
+        binding.ibComplete.setOnClickListener { // 완성 버튼 클릭 시 로딩 화면으로 전환
+            (requireActivity() as MainActivity).replaceFragment(LoadingFragment(), true)
+        }
     }
 
     // 슬롯 머신 스틱 클릭 애니메이션
