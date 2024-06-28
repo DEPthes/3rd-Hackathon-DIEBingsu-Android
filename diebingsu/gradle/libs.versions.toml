@@ -1,11 +1,13 @@
 [versions]
 agp = "8.4.0"
+fragmentKtx = "1.8.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.0"
 espressoCore = "3.6.0"
 appcompat = "1.7.0"
+lifecycleLivedataKtx = "2.8.2"
 logger = "2.2.0"
 loggingInterceptor = "4.9.3"
 material = "1.12.0"
@@ -14,7 +16,10 @@ constraintlayout = "2.1.4"
 retrofit = "2.11.0"
 
 [libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
