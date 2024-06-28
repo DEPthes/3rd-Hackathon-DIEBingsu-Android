@@ -2,9 +2,7 @@ package com.depth.diebingsu.core
 
 import android.app.Application
 import com.depth.diebingsu.BuildConfig
-import com.depth.diebingsu.core.util.LoggerUtils
 import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.util.Utility
 
 class GlobalApplication: Application() {
     override fun onCreate() {
