@@ -1,24 +1,24 @@
 package com.depth.diebingsu
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.depth.diebingsu.databinding.ActivityMainBinding
 import com.depth.diebingsu.presentation.base.BaseActivity
-import com.depth.diebingsu.presentation.utils.KakaoShareManager
+import com.depth.diebingsu.presentation.view.main.MainFragment
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
-    override fun initView() {
 
+    override fun initView() {
+        replaceFragment(MainFragment(), true)
     }
 
     override fun initListener() {
         super.initListener()
+    }
 
-        binding.btnShare.setOnClickListener{
-            KakaoShareManager(this).doShare("invitation")
-        }
+    fun replaceFragment(fragment: Fragment, isAddBackStack: Boolean){
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fl_main, fragment)
+        if(isAddBackStack) ft.addToBackStack(null)
+        ft.commit()
     }
 }
