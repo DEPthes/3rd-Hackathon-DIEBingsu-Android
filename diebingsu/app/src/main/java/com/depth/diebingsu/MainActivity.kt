@@ -8,11 +8,7 @@ import com.depth.diebingsu.presentation.view.main.MainFragment
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun initView() {
-        replaceFragment(MainFragment(), true)
-    }
-
-    override fun initListener() {
-        super.initListener()
+        replaceFragment(MainFragment(), false)
     }
 
     fun replaceFragment(fragment: Fragment, isAddBackStack: Boolean){
