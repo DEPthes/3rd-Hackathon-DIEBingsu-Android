@@ -72,4 +72,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     implementation(libs.v2.share)
+
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 }
