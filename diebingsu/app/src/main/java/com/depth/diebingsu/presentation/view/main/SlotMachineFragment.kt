@@ -3,17 +3,23 @@ package com.depth.diebingsu.presentation.view.main
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.animation.doOnEnd
+import androidx.fragment.app.viewModels
 import com.depth.diebingsu.MainActivity
 import com.depth.diebingsu.R
+import com.depth.diebingsu.data.remote.model.Information
 import com.depth.diebingsu.databinding.FragmentSlotmachineBinding
 import com.depth.diebingsu.presentation.base.BaseFragment
+import com.depth.diebingsu.presentation.utils.UiState
 import kotlin.random.Random
 
 class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fragment_slotmachine) {
+    private val slotMachineViewModel: SlotMachineViewModel by viewModels()
     private val ingredients = listOf(
         "딸기", "망고", "바나나", "키위", "블루베리", "수박", "복숭아", "멜론",
         "파인애플", "라즈베리", "포도", "감", "석류", "체리", "자몽", "레몬",
@@ -22,7 +28,8 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
         "초코 시럽", "캐러멜 시럽", "딸기 시럽", "망고 시럽", "꿀", "팥", "떡",
         "젤리", "아이스크림", "휘핑크림", "쿠키", "시리얼", "아몬드", "호두", "피칸",
         "초콜릿 칩", "코코넛", "젤리빈", "치즈", "피스타치오", "마카롱", "크랜베리",
-        "건포도", "타피오카 펄", "마시멜로우", "말린 바나나")
+        "건포도", "타피오카 펄", "마시멜로우", "말린 바나나"
+    )
 
     override fun initView() {
     }
@@ -34,8 +41,8 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
         }
 
         binding.ibStick.setOnClickListener { // 스틱 클릭 시 재료 랜덤 설정
-            animateStick()
-            animateSlotMachine()
+            animateStick() // 스틱 애니메이션 실행
+            slotMachineViewModel.getRandomIngredients() // 서버에서 재료 가져오기
         }
 
         val directTextButtons = listOf( // 직접 입력 버튼 클릭 시 포커싱
@@ -57,7 +64,10 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
         }
 
         binding.ibComplete.setOnClickListener { // 완성 버튼 클릭 시 로딩 화면으로 전환
-            (requireActivity() as MainActivity).replaceFragment(LoadingFragment(), true)
+            (requireActivity() as MainActivity).replaceFragment(LoadingFragment(information
+            = Information(item1 = binding.ivSlot1.text.toString(),
+                item2 = binding.ivSlot2.text.toString(),
+                item3 = binding.ivSlot3.text.toString()) ), true)
         }
     }
 
@@ -75,9 +85,10 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
     }
 
     // 슬롯 머신 애니메이션 함수
-    private fun animateSlotMachine() {
+    private fun animateSlotMachine(item1: String, item2: String, item3: String) {
         val slotDuration = 1000L // Duration for each slot animation
         val slots = listOf(binding.ivSlot1, binding.ivSlot2, binding.ivSlot3)
+        val finalItems = listOf(item1, item2, item3)
 
         slots.forEachIndexed { index, editText ->
             val animator = ValueAnimator.ofInt(0, ingredients.size - 1)
@@ -89,18 +100,17 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
             animator.startDelay = index * slotDuration / 3 // Staggered start
             animator.doOnEnd {
                 if (index == slots.lastIndex) {
-                    setRandomValuesToSlots(slots)
+                    setFinalValuesToSlots(slots, finalItems)
                 }
             }
             animator.start()
         }
     }
 
-    // 재료 랜덤으로 추출하는 함수
-    private fun setRandomValuesToSlots(slots: List<EditText>) {
-        slots.forEach { editText ->
-            val randomValue = ingredients[Random.nextInt(ingredients.size)]
-            editText.setText(randomValue)
+    // 최종 재료 설정 함수
+    private fun setFinalValuesToSlots(slots: List<EditText>, finalItems: List<String>) {
+        slots.forEachIndexed { index, editText ->
+            editText.setText(finalItems[index])
         }
     }
 
@@ -123,6 +133,39 @@ class SlotMachineFragment: BaseFragment<FragmentSlotmachineBinding>(R.layout.fra
             if (event.rawX < x || event.rawX > x + editText.width || event.rawY < y || event.rawY > y + editText.height) {
                 editText.clearFocus()
                 imm.hideSoftInputFromWindow(editText.windowToken, 0)
+            }
+        }
+    }
+
+    override fun observer() {
+        slotMachineViewModel.ingredients.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                    Log.d("TAG", "RandomIngredients fail")
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+                is UiState.Loading -> {
+                    Log.d("TAG", "RandomIngredients loading")
+                }
+                is UiState.Success -> {
+                    Log.d("TAG", "RandomIngredients success")
+                    animateSlotMachine(it.data.item1, it.data.item2, it.data.item3) // 슬롯 애니메이션 실행
+                }
+            }
+        }
+        slotMachineViewModel.generate.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                    Log.d("TAG", "RandomIngredients fail")
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+                is UiState.Loading -> {
+                    Log.d("TAG", "RandomIngredients loading")
+                }
+                is UiState.Success -> {
+                    Log.d("TAG", "RandomIngredients success")
+
+                }
             }
         }
     }

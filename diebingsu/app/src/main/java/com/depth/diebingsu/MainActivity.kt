@@ -1,5 +1,6 @@
 package com.depth.diebingsu
 
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.depth.diebingsu.databinding.ActivityMainBinding
 import com.depth.diebingsu.presentation.base.BaseActivity
@@ -9,6 +10,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun initView() {
         replaceFragment(MainFragment(), false)
+        //val intent = Intent(this, FeedActivity::class.java)
+        //startActivity(intent)
     }
 
     fun replaceFragment(fragment: Fragment, isAddBackStack: Boolean){

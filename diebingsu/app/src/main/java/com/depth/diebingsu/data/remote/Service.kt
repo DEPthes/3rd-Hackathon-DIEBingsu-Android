@@ -1,13 +1,16 @@
 package com.depth.diebingsu.data.remote
 
+import com.depth.diebingsu.data.remote.model.GenerateDTO
+import com.depth.diebingsu.data.remote.model.Information
 import com.depth.diebingsu.data.remote.model.IngredientDTO
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Query
+
 
 interface Service {
-    @GET("/ingredient")
-    suspend fun getRandomIngredient(
-        @Query("count") count: Int
-    ): Response<IngredientDTO>
+    @GET("/api/v1/ingredient")
+    suspend fun getRandomIngredients(): Response<IngredientDTO>
+    @GET("/api/v1/user/generate")
+    suspend fun getGenerate(@Body information: Information): Response<GenerateDTO>
 }

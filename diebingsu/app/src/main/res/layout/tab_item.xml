@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/tab_bingsu_world"
+        android:layout_width="116dp"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
+
+        android:padding="10dp"
+        android:src="@drawable/ic_bingsu_world_txt" />
+
+    <ImageView
+        android:id="@+id/tab_my_bingsu"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_my_bingsu_txt" />
+
+</LinearLayout>
